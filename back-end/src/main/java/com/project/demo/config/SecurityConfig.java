@@ -31,7 +31,9 @@ public class SecurityConfig {
         return http
                  .csrf(customizer -> customizer.disable())
                  .cors(Customizer.withDefaults())
-                 .authorizeHttpRequests(requests ->requests.anyRequest().authenticated())
+                 .authorizeHttpRequests(requests ->
+                         requests.requestMatchers("/api/addNewUser").permitAll()
+                         .anyRequest().authenticated())
                  //.formLogin(Customizer.withDefaults())
                  .httpBasic(Customizer.withDefaults())
                 // .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
