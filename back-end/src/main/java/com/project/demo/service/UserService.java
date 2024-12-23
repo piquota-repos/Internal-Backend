@@ -1,6 +1,8 @@
 package com.project.demo.service;
 
+import com.project.demo.model.Role;
 import com.project.demo.model.Users;
+import com.project.demo.repo.RoleRepo;
 import com.project.demo.repo.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,15 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
+
+   @Autowired
+    private RoleRepo roleRepository;
 
     @Autowired
     private UserRepo userRepo;
@@ -28,6 +35,7 @@ public class UserService {
     private  JWTService jwtService;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -50,5 +58,19 @@ public class UserService {
 
     public List<Users> getUser() {
         return userRepo.findAll();
+    }
+
+
+    @Transactional
+    public void assignUser(String userName, String role){
+        Users user = userRepo.findByUsername(userName);
+
+        Role roles = roleRepository.findByName(role);
+                //.orElseThrow(() -> new RuntimeException("Role not found"));
+
+        user.getRoles().add(roles);
+        userRepo.save(user);
+
+
     }
 }

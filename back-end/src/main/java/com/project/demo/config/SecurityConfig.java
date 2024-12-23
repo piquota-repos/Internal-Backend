@@ -40,6 +40,7 @@ public class SecurityConfig {
                  .cors(Customizer.withDefaults())
                  .authorizeHttpRequests(requests ->
                          requests.requestMatchers("/api/addNewUser","/api/login").permitAll()
+                                 .requestMatchers("/api/allUser").hasAuthority("RoleADMIN")
                          .anyRequest().authenticated())
                  //.formLogin(Customizer.withDefaults())
                  .httpBasic(Customizer.withDefaults())

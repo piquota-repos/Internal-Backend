@@ -1,23 +1,38 @@
 package com.project.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 
+import java.util.Set;
 
-@Getter
-@Setter
 @Entity
+@Table(name = "users")
 public class Users {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
     private Long id;
+
+
+    private String username;
+
+
+    private String password;
+
+    private boolean isActive;
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name= "user_role",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id")
+    )
+    @JsonIgnore
+    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -43,8 +58,21 @@ public class Users {
         this.password = password;
     }
 
-    private String username;
+    public boolean isActive() {
+        return isActive;
+    }
 
-    private String password;
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
 
 }
