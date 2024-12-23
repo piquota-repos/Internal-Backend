@@ -45,7 +45,9 @@ public class UserService {
         newUser.setUsername(user.getUsername());
         newUser.setPassword(encoder.encode(user.getPassword()));
         userRepo.save(newUser);
-        return new ResponseEntity<>(201, HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("Sign up successful");
 
     }
 
